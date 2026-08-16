@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>যুক্তবর্ণ ভাঙো</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+Da+2:wght@600;700;800&display=swap" rel="stylesheet" />
+
+<!--
+  ============================================================
+  বিজ্ঞাপন কোড বসানোর জায়গা (Adsterra)
+  ------------------------------------------------------------
+  Adsterra থেকে পাবলিশার একাউন্ট অ্যাপ্রুভ হওয়ার পর ওরা যে
+  <script> কোডটা দেবে, সেটা এখানে বসিয়ে দিন। এটা মাথার (head)
+  ভেতরে থাকা Ad Network এর "verification/global script" এর জন্য।
+  ব্যানার/নেটিভ অ্যাডের জন্য আলাদা <div> লাগবে, সেটা নিচে
+  gameScreen/endScreen এর ভেতরে কমেন্ট দিয়ে দেখানো আছে।
+  -->
+</head>
+<body>
+
+  <!-- ================= লোডিং স্ক্রিন ================= -->
+  <section id="loadingScreen" class="screen">
+    <div class="logo">✦ যুক্তবর্ণ ভাঙো ✦</div>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loadingFill"></div>
+    </div>
+    <div class="loading-text">লোড হচ্ছে...</div>
+  </section>
+
+  <!-- ================= গেম শুরুর স্ক্রিন ================= -->
+  <section id="startScreen" class="screen hidden">
+    <div class="logo">✦ যুক্তবর্ণ ভাঙো ✦</div>
+    <p class="instruction">
+      স্ক্রিনে একটা যুক্তবর্ণ শব্দ দেখানো হবে। শব্দটাকে তার ছোট ছোট
+      অংশে ভেঙে <b>","</b> (কমা) দিয়ে আলাদা করে লিখুন।
+    </p>
+    <div class="example-box">
+      উদাহরণ: <span class="example-word">রাজস্বব্যবস্থা</span> → <span class="example-answer">র,জ,স,ব,ব,ব,স,থ</span>
+    </div>
+    <p class="instruction">⏱️ সময় থাকবে মাত্র ১২০ সেকেন্ড। যত বেশি সম্ভব সঠিক উত্তর দিন!</p>
+    <button class="btn-primary" id="startBtn">খেলা শুরু করুন</button>
+  </section>
+
+  <!-- ================= মূল গেম স্ক্রিন ================= -->
+  <section id="gameScreen" class="screen hidden">
+    <div class="top-bar">
+      <div class="stat-box">
+        <div class="stat-label">সময়</div>
+        <div class="stat-value" id="timerValue">১২০</div>
+      </div>
+      <div class="stat-box win-box">
+        <div class="stat-label">সঠিক</div>
+        <div class="stat-value" id="winValue">০</div>
+      </div>
+      <div class="stat-box fail-box">
+        <div class="stat-label">ভুল</div>
+        <div class="stat-value" id="failValue">০</div>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-label">এই শব্দটা ভেঙে লিখুন</div>
+      <div class="word-display" id="wordDisplay">-</div>
+    </div>
+
+    <div class="answer-row">
+      <input
+        type="text"
+        id="answerInput"
+        class="answer-input"
+        placeholder="যেমন: র,জ,স,ব,ব,ব,স,থ"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      />
+      <button class="btn-submit" id="submitBtn">✓</button>
+    </div>
+
+    <!-- ফিডব্যাক এনিমেশন ওভারলে -->
+    <div id="feedbackOverlay" class="feedback-overlay hidden">
+      <div id="feedbackIcon" class="feedback-icon"></div>
+      <div id="feedbackText" class="feedback-text"></div>
+    </div>
+  </section>
+
+  <!-- ================= শেষ স্ক্রিন (সারাংশ) ================= -->
+  <section id="endScreen" class="screen hidden">
+    <div class="logo">⏹️ সময় শেষ!</div>
+    <div class="result-card">
+      <div class="result-row">
+        <span>মোট চেষ্টা</span>
+        <span id="resultTotal">০</span>
+      </div>
+      <div class="result-row win-text">
+        <span>সঠিক উত্তর</span>
+        <span id="resultWin">০</span>
+      </div>
+      <div class="result-row fail-text">
+        <span>ভুল উত্তর</span>
+        <span id="resultFail">০</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="restartBtn">আবার খেলুন</button>
+    <button class="btn-secondary" id="shareBtn">বন্ধুদের সাথে শেয়ার করুন</button>
+
+    <!--
+      বিজ্ঞাপনের জায়গা (Adsterra ব্যানার/নেটিভ অ্যাড):
+      গেম শেষের স্ক্রিনে একটা বিজ্ঞাপন দেখানোর জন্য ভালো জায়গা,
+      কারণ ইউজার এখানে থেমে ফলাফল দেখে - বিরক্তিকর হবে না।
+      Adsterra থেকে পাওয়া ব্যানার কোড এখানে বসিয়ে দিন।
+    -->
+    <div id="adSlotEnd" style="margin-top: 20px;"></div>
+  </section>
+
+  <script src="game.js"></script>
+</body>
+</html>
